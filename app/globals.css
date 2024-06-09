@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.slick-prev:before,
+.slick-next:before {
+  color: #1c575f !important;
+}
+.ant-carousel .slick-prev {
+  font-size: 20px;
+  font-weight: 700;
+  left: 10px;
+  z-index: 2;
+  color: #ffffff;
+}
+.ant-carousel .slick-next {
+  font-size: 20px;
+  font-weight: 700;
+  right: 10px;
+  z-index: 2;
+  color: #ffffff;
+}
+
+.ant-carousel .slick-prev:hover,
+.ant-carousel .slick-next:hover {
+  color: #ffffff;
+}

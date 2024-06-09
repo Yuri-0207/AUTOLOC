@@ -179,7 +179,7 @@ const AddCar = () => {
       updateVoitureData('willaya', user?.data.ville);
     }
     updateVoitureData('immatricule', immatricule);
-  }, [immatricule]);
+  }, [immatricule, user?.data.ville]);
 
   useEffect(() => {
     updateVoitureData('carburant', carburant);

@@ -7,9 +7,9 @@ import { calculateNombreJours, calculatePrixTotal } from '@/utils/functions';
 import { Modal, Image } from 'antd';
 import { collection, query, where, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, storage } from '@/firebase/firebase';
-import { saveAs } from 'file-saver';
-import { uploadBytes, ref, getDownloadURL } from '@firebase/storage';
-import PDFGenerator from '@/contrat/PDFGenerator';
+// import { saveAs } from 'file-saver';
+// import { uploadBytes, ref, getDownloadURL } from '@firebase/storage';
+// import PDFGenerator from '@/contrat/PDFGenerator';
 // import 'jspdf.plugin.png_support';
 
 

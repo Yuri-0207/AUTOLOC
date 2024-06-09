@@ -16,27 +16,7 @@ const ReservedCarCard: React.FC<ReservedCarCardProps> = ({user}) => {
 
   const [reservedCarData, setReservedCarsData] = useState<ReservedCarsData[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  const fetchReservations = async (): Promise<ReservationData[]> => {
-    const q = query(collection(db, 'Reservation'), where('idUser', '==', user?.uid));
-    const querySnapshot = await getDocs(q);
 
-    const fetchedReservations: ReservationData[] = [];
-    querySnapshot.forEach(doc => {
-      const reservationData = doc.data() as ReservationData;
-      fetchedReservations.push({ ...reservationData });
-    });
-    return fetchedReservations;
-  };
-  
-  const fetchCars = async (): Promise<CarProps[]> => {
-    const q = query(collection(db, 'Voiture'));
-    const querySnapshot = await getDocs(q);
-    const fetchedCars = querySnapshot.docs.map((doc) => 
-      convertCarFormDataToCarProps(doc.data() as CarFormData, doc.id)
-    ) as CarProps[];
-    return fetchedCars;
-  };
 
   interface OwnerData {
     nomAgence: string;
@@ -44,24 +24,48 @@ const ReservedCarCard: React.FC<ReservedCarCardProps> = ({user}) => {
     numeroTelephoneSecondaire: string | undefined;
   }
   
-  const fetchOwners = async (): Promise<Record<string, OwnerData>> => {
-    const q = query(collection(db, 'OwnerUser'));
-    const querySnapshot = await getDocs(q);
-    const fetchedOwners: Record<string, OwnerData> = {};
-    querySnapshot.forEach(doc => {
-      const ownerData = doc.data() as OwnerFormData;
-      fetchedOwners[doc.id] = {
-        nomAgence: ownerData.nomAgence,
-        numeroTelephone: ownerData.numeroTelephone,
-        numeroTelephoneSecondaire: ownerData.numeroTelephoneSecondaire
-      };
-    });
-    return fetchedOwners;
-  };
+  
 
   
 
   useEffect(() => {
+
+    const fetchReservations = async (): Promise<ReservationData[]> => {
+      const q = query(collection(db, 'Reservation'), where('idUser', '==', user?.uid));
+      const querySnapshot = await getDocs(q);
+  
+      const fetchedReservations: ReservationData[] = [];
+      querySnapshot.forEach(doc => {
+        const reservationData = doc.data() as ReservationData;
+        fetchedReservations.push({ ...reservationData });
+      });
+      return fetchedReservations;
+    };
+    
+    const fetchCars = async (): Promise<CarProps[]> => {
+      const q = query(collection(db, 'Voiture'));
+      const querySnapshot = await getDocs(q);
+      const fetchedCars = querySnapshot.docs.map((doc) => 
+        convertCarFormDataToCarProps(doc.data() as CarFormData, doc.id)
+      ) as CarProps[];
+      return fetchedCars;
+    };
+
+    const fetchOwners = async (): Promise<Record<string, OwnerData>> => {
+      const q = query(collection(db, 'OwnerUser'));
+      const querySnapshot = await getDocs(q);
+      const fetchedOwners: Record<string, OwnerData> = {};
+      querySnapshot.forEach(doc => {
+        const ownerData = doc.data() as OwnerFormData;
+        fetchedOwners[doc.id] = {
+          nomAgence: ownerData.nomAgence,
+          numeroTelephone: ownerData.numeroTelephone,
+          numeroTelephoneSecondaire: ownerData.numeroTelephoneSecondaire
+        };
+      });
+      return fetchedOwners;
+    };
+
     const getReservationsAndCars = async () => {
       try {
         if (!user) return;
@@ -101,7 +105,7 @@ const ReservedCarCard: React.FC<ReservedCarCardProps> = ({user}) => {
       }
     };
     getReservationsAndCars();
-  }, [user?.uid]);
+  }, [user, user?.uid]);
 
   if (loading) {
     return (

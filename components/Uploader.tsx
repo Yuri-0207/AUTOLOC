@@ -124,11 +124,11 @@ const handleDragEvent = (event: React.DragEvent<HTMLDivElement>) => {
           {isDragging ? (
 
             <span className='select text-mystic-900 ml-1 cursor-pointer transition duration-300 focus:opacity-60 '>
-              Deposez l'Image ici
+              Deposez l&apos;Image ici
             </span>
           ) : (
             <>
-            Glisser et Deposez l'Image ici ou {" "}
+            Glisser et Deposez l&apos;Image ici ou {" "}
 
             <span className='select text-turquoise-500 font-bold ml-1 cursor-pointer transition duration-300 focus:opacity-60'
             role='button' >Parcourez</span>

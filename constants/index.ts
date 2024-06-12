@@ -8759,7 +8759,7 @@ export const carModels = [
   },
   {
     "id": 1227,
-    "modele": "CLIO3ESTATE",
+    "modele": "CLIO 3 ESTATE",
     "id_marque": 85,
     "rappel_marque": "RENAULT"
   },
@@ -8778,6 +8778,12 @@ export const carModels = [
   {
     "id": 1230,
     "modele": "CLIO 5",
+    "id_marque": 85,
+    "rappel_marque": "RENAULT"
+  },
+  {
+    "id": 12301324,
+    "modele": "CLIO 5 RSline",
     "id_marque": 85,
     "rappel_marque": "RENAULT"
   },
@@ -11609,63 +11615,63 @@ export const carModels = [
 export const carLogos = [
   {
     name: 'Audi',
-    imagePath: './carLogos/Audi.png',
+    imagePath: '/carLogos/Audi.png',
   },
   {
     name: 'Bmw',
-    imagePath: './carLogos/Bmw.png',
+    imagePath: '/carLogos/Bmw.png',
   },
   {
     name: 'Citroen',
-    imagePath: './carLogos/Citroen.png',
+    imagePath: '/carLogos/Citroen.png',
   },
   {
     name: 'Fiat',
-    imagePath: './carLogos/Fiat.png',
+    imagePath: '/carLogos/Fiat.png',
   },
   {
     name: 'Hyundai',
-    imagePath: './carLogos/Hyundai.png',
+    imagePath: '/carLogos/Hyundai.png',
   },
   {
     name: 'Mazda',
-    imagePath: './carLogos/Mazda.png',
+    imagePath: '/carLogos/Mazda.png',
   },
   {
     name: 'MercedesBenz',
-    imagePath: './carLogos/MercedesBenz.png',
+    imagePath: '/carLogos/MercedesBenz.png',
   },
   {
     name: 'Nissan',
-    imagePath: './carLogos/Nissan.png',
+    imagePath: '/carLogos/Nissan.png',
   },
   {
     name: 'Opel',
-    imagePath: './carLogos/Opel.png',
+    imagePath: '/carLogos/Opel.png',
   },
   {
     name: 'Peugeot',
-    imagePath: './carLogos/Peugeot.png',
+    imagePath: '/carLogos/Peugeot.png',
   },
   {
     name: 'Renault',
-    imagePath: './carLogos/Renault.png',
+    imagePath: '/carLogos/Renault.png',
   },
   {
     name: 'Seat',
-    imagePath: './carLogos/Seat.png',
+    imagePath: '/carLogos/Seat.png',
   },
   {
     name: 'Skoda',
-    imagePath: './carLogos/Skoda.png',
+    imagePath: '/carLogos/Skoda.png',
   },
   {
     name: 'Toyota',
-    imagePath: './carLogos/Toyota.png',
+    imagePath: '/carLogos/Toyota.png',
   },
   {
     name: 'Volkswagen',
-    imagePath: './carLogos/Volkswagen.png',
+    imagePath: '/carLogos/Volkswagen.png',
   }
 ]
 export const cars = [

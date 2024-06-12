@@ -13,6 +13,28 @@ import { useRouter } from 'next/navigation';
 import { calculatePrixTotal, capitalizeFirstLetter } from '@/utils/functions';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
+interface CustomCarouselProps {
+  car: CarProps;
+}
+
+const CustomCarousel: React.FC<CustomCarouselProps> = ({ car }) => {
+  return (
+    <Carousel arrows prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />} autoplay autoplaySpeed={10000} >
+      {(car.imagesVoiture as string[]).map((pic, index) => (
+          <div key={index} className='w-full h-[400px] relative rounded-md'>
+            <Image key={index}
+              src={pic}
+              alt={`${car.marque} ${car.modele}`}
+              fill
+              style={{ objectFit: 'cover', marginLeft: 'auto', marginRight: 'auto', borderRadius: 6 }}
+              loading='eager'
+            />
+          </div>
+        ))}
+    </Carousel>
+  )
+}
+
 const services = [
   {
     title: "Conducteur additionnel",
@@ -129,6 +151,7 @@ const Modal: React.FC<ModalProps> = ({ car, agency, startDate, endDate, onClose,
       onCancel={onClose}
       footer={null}
       width="80%"
+      centered
     >
       <div className="relative h-full overflow-y-auto w-full flex md:flex-col sm:flex-col xsm:flex-col md gap-8 bg-white rounded-lg">
         <div className='flex flex-col gap-4 justify-around w-1/2 md:w-full sm:w-full xsm:w-full'>
@@ -137,20 +160,11 @@ const Modal: React.FC<ModalProps> = ({ car, agency, startDate, endDate, onClose,
             <h3 className="text-xl font-bold">Agence: {agency?.nomAgence}</h3>
             <button onClick={handleViewInMap} className='text-casal-700 font-semibold'>Voir l&apos;agence dans Map</button>
           </div>
-          <div className='relative w-[544] h-72 rounded-md px-4'>
-            <Carousel arrows prevArrow={<LeftOutlined />} nextArrow={<RightOutlined />} autoplay autoplaySpeed={5000} >
-              {(car.imagesVoiture as string[]).map((pic, index) => (
-                  <div key={index} className='w-full h-72'>
-                    <Image key={index}
-                      src={pic}
-                      alt={`${car.marque} ${car.modele}`}
-                      width={0} height={0} sizes='100vw' style={{ objectFit: 'cover',width: '100%', height: '100%', marginLeft: 'auto', marginRight: 'auto' }}
-                      loading='eager'
-                    />
-                  </div>
-                ))}
-            </Carousel>
+
+          <div className='relative w-[544] h-[400px] rounded-md px-4'>
+            <CustomCarousel car={car} />
           </div>
+
           <div className='flex gap-4'>
             <div className='flex gap-2 justify-center items-center'>
               <FaUser />

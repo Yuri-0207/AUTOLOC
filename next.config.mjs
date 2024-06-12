@@ -4,7 +4,7 @@ const nextConfig = {
     serverComponentsExternalPackages: ['@react-pdf/renderer'],
   },
   images: {
-    domains: ['firebasestorage.googleapis.com'],
+    domains: ['firebasestorage.googleapis.com']
   },
 };
 

@@ -1,10 +1,10 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
-import { collection, query, where, getDocs, doc as firestoreDoc, getDoc, DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc as firestoreDoc, getDoc, DocumentData } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
 import { CarFormData, NormalUserFormData, ReservationData, ReservationWithDetails } from '@/types';
 import Image from 'next/image';
-import { Image as Imagee, Modal } from 'antd';
+import { Image as Imagee, Modal, Button, Skeleton } from 'antd';
 import PDFGenerator from '@/contrat/PDFGenerator';
 
 type PDFGeneratorHandle = {
@@ -36,11 +36,10 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
   const [selectedUser, setSelectedUser] = useState<NormalUserFormData | null>(null);
   const [visible, setVisible] = useState(false);
   const [selectedUserImageUrl, setSelectedUserImageUrl] = useState<string | null>(null);
-  const [selectedPdfUrl, setSelectedPdfUrl] = useState<string | null | undefined>(null);
-  const [pdfError, setPdfError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [pdfImageUrl, setPdfImageUrl] = useState<string | null>(null);
   const [selectedReservation, setSelectedReservation] = useState<ReservationWithDetails | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const pdfGeneratorRef = useRef<PDFGeneratorHandle>(null);
 
@@ -49,7 +48,7 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
     const fetchReservations = async () => {
       if (user) {
         try {
-          const reservationsQuery = query(collection(db, 'Reservation'), where('idAgence', '==', user.uid));
+          const reservationsQuery = query(collection(db, 'Reservation'), where('idAgence', '==', user.uid), where('etat', '==', 'Accepte'));
           const reservationsSnapshot = await getDocs(reservationsQuery);
           const reservationsData: Reservation[] = [];
           const carsData: { [key: string]: Car} = {};
@@ -73,7 +72,6 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
               const clientDocSnap = await getDoc(clientDocRef);
               if (clientDocSnap.exists()) {
                 clientsData[reservationData.idUser] = { id: clientDocSnap.id, ...clientDocSnap.data() as NormalUserFormData } as NormalUser;
-                console.log(clientDocSnap.data())
               }
             }
           }
@@ -81,8 +79,10 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
           setReservations(reservationsData);
           setCars(carsData);
           setClients(clientsData);
+          setLoading(false);
         } catch (error) {
           console.error('Error fetching reservations: ', error);
+          setLoading(false);
         }
       }
     };
@@ -109,13 +109,33 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
   const handleViewContractClick = (reservation: Reservation, car: CarFormData, client: NormalUserFormData) => {
     setSelectedReservation({ reservation, car, user: client });
     setModalVisible(true);
+    setPdfUrl(null);
   };
 
+  const handleGeneratePdf = async () => {
+    if (pdfGeneratorRef.current) {
+      const url = await pdfGeneratorRef.current.generatePDFImage();
+      setPdfUrl(url || null);
+    }
+  };
 
 
   return (
     <div>
-      {reservations.length > 0 ? (
+      {loading ? (
+        <div className='grid grid-cols-2 gap-4 justify-items-center'>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} 
+            className="bg-gradient-to-r from-mystic-100/30 to-casal-50/30 w-[531] h-[252] shadow-md rounded-lg p-3 gap-2 flex flex-col justify-between items-center">
+              <Skeleton active title={{width: 250}} paragraph={false} style={{marginLeft: 150}} />
+              <div className='grid grid-cols-2 gap-2 w-full justify-items-center'>
+                <Skeleton.Image active style={{width: 250, height: 160, borderRadius: 6}} />
+                <Skeleton active title={false} paragraph={{rows: 4, width: [126, 123, 208, 147]}} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : reservations.length > 0 ? (
         <div className='grid grid-cols-2 gap-4 justify-items-center'>
           {reservations.map((reservation) => (
             <div key={reservation.id} 
@@ -165,7 +185,18 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
       <Modal
         title={`Contrat de Location ${selectedReservation?.user.nom} ${selectedReservation?.user.prenom}`}
         visible={modalVisible}
-        footer={null}
+        footer={
+          <div className='flex gap-3 justify-end'>
+          <Button onClick={handleGeneratePdf} className='text-casal-900 font-medium border border-casal-900'>Generee le PDF</Button>
+          {pdfUrl && (
+            <div>
+              <a href={pdfUrl} download={`Contrat_Location_${selectedReservation?.user.nom}_${selectedReservation?.user.prenom}.pdf`} target="_blank" rel='noopener noreferrer'>
+                <Button type='primary' className='bg-casal-900 font-medium'>Telecharger PDF</Button>
+              </a>
+            </div>
+          )}
+          </div>
+        }
         onCancel={() => setModalVisible(false)}
         width={1000}
       >
@@ -173,9 +204,6 @@ const RentalsMade: React.FC<RentalsMadeProps> = ({ user }) => {
           <PDFGenerator ref={pdfGeneratorRef} reservation={selectedReservation} user={user} />
         )}
       </Modal>
-      {/* {selectedReservation && (
-        <PDFGenerator ref={pdfGeneratorRef} reservation={selectedReservation} user={user} />
-      )} */}
     </div>
   )
 }

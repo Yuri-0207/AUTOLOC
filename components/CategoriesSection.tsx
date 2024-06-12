@@ -4,6 +4,7 @@ import { categories } from '@/constants';
 import Carousel from 'react-multi-carousel';
 import "react-multi-carousel/lib/styles.css";
 import Link from 'next/link';
+import Image from 'next/image';
 
 const CategoriesSection = () => {
 
@@ -43,8 +44,17 @@ const CategoriesSection = () => {
                   <div className='text-2xl font-semibold text-casal-900 pt-2'>{cat.title}</div>
                   <p className='w-full line-clamp-2 cursor-default text-center hover:line-clamp-none transition-all duration-500'>{cat.description}</p>
                   <Link href='' className='text-casal-900 hover:text-casal-600 font-semibold underline-offset-2'>Voir les {cat.title}s</Link>
-                  <img key={cat.title || index} src={cat.imagePath} alt={cat.title}
-                  className='h-4/6 w-full object-cover mx-auto hover:scale-105 transition-all duration-300'/>
+                  <div className='h-3/6 w-full relative'>
+                    <Image
+                    key={cat.title || index} 
+                    src={cat.imagePath} 
+                    alt={cat.title}
+                    width={500}
+                    height={400}
+                    className='hover:scale-105 transition-all duration-300'
+                    style={{ objectFit: 'cover' }}
+                    />
+                  </div>
                 </div>
               </div>
             ))}

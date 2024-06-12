@@ -87,15 +87,15 @@ const FleetCarCard: React.FC<FleetCarCardProps> = ({ user, limit, isInLanding })
 
   return (
   <AntdApp>
-    <div className={`flex flex-wrap gap-6 text-mystic-900 ${isInLanding ? ' justify-evenly' : 'justify-center'}`}>
+    <div className={`flex flex-wrap gap-4 text-mystic-900 ${isInLanding ? ' justify-evenly' : 'justify-center'}`}>
       {displayedCars.map((car, index) => {
         const { status, currentReservation, futurePeriods } = getCurrentStatus(car.availability);
 
         return (
           <div key={index} 
-          className="bg-gradient-to-r from-mystic-100/30 to-casal-50/30 w-72 h-fit shadow-md rounded-lg p-2 flex flex-col gap-2 justify-between items-center">
+          className="bg-gradient-to-r from-mystic-100/30 to-casal-50/30 w-80 h-fit shadow-md rounded-lg p-2 py-3 flex flex-col gap-3 justify-between items-center">
             <h2 className="text-lg text-center font-semibold text-nowrap">{car.marque} {car.modele}</h2>
-            <div className="relative w-full h-40 rounded-md overflow-hidden">
+            <div className="relative w-full h-48 rounded-md overflow-hidden">
               <Image
                 src={car.imagesVoiture[0]}
                 alt={`${car.marque} ${car.modele}`}
@@ -107,12 +107,12 @@ const FleetCarCard: React.FC<FleetCarCardProps> = ({ user, limit, isInLanding })
               <div className="flex justify-between">
                 <div className="font-medium">{car.categorie.toUpperCase()}</div>
                 <div className="font-semibold text-lg">{car.annee}</div>
-                <div className="font-semibold">{car.prixParJour} Da</div>
+                <div className="font-semibold text-lg">{car.prixParJour}Da</div>
               </div>
-              <div className="flex justify-between">
-                <div className="font-medium flex flex-col items-center"><FaGasPump /><p>{capitalizeFirstLetter(car.carburant)}</p></div>
-                <div className="font-semibold flex flex-col items-center"><GiPathDistance /><p>{capitalizeFirstLetter(car.killometrage)}{car.killometrage !== 'illimite' ? <span>Km</span> : ''}</p></div>
-                <div className="font-medium flex flex-col items-center"><GiGearStickPattern /><p>{capitalizeFirstLetter(car.transition.substring(0,7))}</p></div>
+              <div className="flex justify-evenly">
+                <div className="text-[17px] font-medium flex flex-col items-center"><FaGasPump /><p>{capitalizeFirstLetter(car.carburant)}</p></div>
+                <div className="text-[17px] font-semibold flex flex-col items-center"><GiPathDistance /><p>{capitalizeFirstLetter(car.killometrage)}{car.killometrage !== 'illimite' ? <span>Km</span> : ''}</p></div>
+                <div className="text-[17px] font-medium flex flex-col items-center"><GiGearStickPattern /><p>{capitalizeFirstLetter(car.transition.substring(0,7))}</p></div>
               </div>
               <div className='flex justify-evenly items-center'>
                 <Popconfirm 
@@ -122,24 +122,25 @@ const FleetCarCard: React.FC<FleetCarCardProps> = ({ user, limit, isInLanding })
                 onCancel={cancel}
                 okText="Supprimer"
                 cancelText="Annuler"
+                okButtonProps={{ style: { backgroundColor: '#be2510', borderColor: '#be2510' }, className: 'text-white font-medium' }}
+                cancelButtonProps={{ style: { backgroundColor: '#178087', borderColor: '#178087' }, className: 'text-white font-medium'}}
                 >
                   <button 
-                  // onClick={() => handleDelete(car.id)} 
-                  className='w-fit text-flamingo-700 rounded-md px-1 py-1 hover:underline-offset-4 transition-all duration-200 text-xs font-semibold'>
+                  className='w-fit text-flamingo-700 rounded-md p-[3px] border border-flamingo-700 transition-all duration-200 font-semibold'>
                     Supprimer
                   </button>
                 </Popconfirm>
-                <div className="text-center font-medium">
+                <div className="text-center text-[17px] font-medium">
                   {status === 'Reservee' ? (
                     <Popover content={currentReservation ? [currentReservation, ...futurePeriods].join(', ') : 'No reservation'} title="Reservations">
                       <span className="text-flamingo-600 cursor-pointer">Reservee</span>
                     </Popover>
                   ) : futurePeriods.length > 0 ? (
-                    <Popover content={futurePeriods.join(', ')} title="Dates indisponibles">
+                    <Popover content={futurePeriods.map((reservation, index) => <div key={index} className=' border-b border-black w-fit'>{reservation}</div>)} title="Dates indisponibles">
                       <span className="text-yellow-600 cursor-pointer">Dates indisponibles</span>
                     </Popover>
                   ) : (
-                    'Disponible'
+                    'Au garage'
                   )}
                 </div>
               </div>

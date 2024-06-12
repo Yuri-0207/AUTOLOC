@@ -1,7 +1,8 @@
 'use client'
-import React, { Component } from 'react';
+import React from 'react';
 import { carLogos } from '@/constants'
 import Slider from 'react-slick'
+import Image from 'next/image';
 
 
 export default function LogoCarousel() {
@@ -35,7 +36,7 @@ export default function LogoCarousel() {
       <div className='mainContainer'>
       <Slider {...settings}>
         {carLogos.map((car, index) => (
-          <div key={car.name || index} className='h-16 xsm:h-8 sm:h-8 md:h-10 lg:h-10'>
+          <div key={car.name || index} className='h-16 xsm:h-8 sm:h-8 md:h-10 lg:h-10 w-16 xsm:w-8 sm:w-8 md:w-10 lg:w-10'>
             <img key={car.name || index} src={car.imagePath} alt={car.name}
             className="h-full mx-auto opacity-30 grayscale"/>
           </div>

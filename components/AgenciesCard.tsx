@@ -86,15 +86,15 @@ const AgenciesCard: React.FC<UserProps> = ({ user }) => {
         <div className='grid grid-cols-3 2xl:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 xsm:grid-cols-1 gap-6'>
         {agencies.map((agency, index) => (
             <div key={index} 
-            className='bg-gradient-to-r from-mystic-100/30 to-casal-50/30 h-[160] shadow-md rounded-lg p-2 text-center border'>
+            className='bg-gradient-to-r from-mystic-100/30 to-casal-50/30 h-[220px] shadow-md rounded-lg p-2 text-center border flex flex-col justify-between'>
                 <h2 className="text-xl text-casal-900 font-semibold mb-2">{agency.nomAgence}</h2>
                 <div className='grid grid-cols-2 gap-2 mb-2'>
-                    <div className='flex flex-col justify-evenly items-center'>
+                    <div className='flex flex-col justify-evenly items-center gap-[6px]'>
                         <p>{agency.rue} Nº{agency.numeroMaison}</p>
                         <p>{agency.commune}, {agency.ville}</p>
                     </div>
-                    <div className='flex flex-col justify-evenly items-center'>
-                        <p>{agency.email}</p>
+                    <div className='flex flex-col justify-evenly items-center gap-[6px]'>
+                        <p className="w-[170px] break-all">{agency.email}</p>
                         <div className='flex flex-col justify-evenly items-center'>
                             <p>{agency.numeroTelephone}</p>
                             {agency.numeroTelephoneSecondaire && <p>{agency.numeroTelephoneSecondaire}</p>}

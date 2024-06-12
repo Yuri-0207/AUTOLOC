@@ -42,7 +42,7 @@ const CarCard: React.FC<carCardProps> = ({marque, modele, annee, nmbrPlace, carb
           <p>{capitalizeFirstLetter(boiteVitesse)}</p>
         </div>
       </div>
-      <div className='relative rounded-md w-full h-56'>
+      <div className='relative rounded-md w-full h-64'>
         <Image
           src={imageVoiture ? imageVoiture[0] : '/logo-text-light-mode.png'}
           alt='Car picture'

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import CarCard from './CarCard'
 import { IoChevronBack, IoChevronForward, IoFilter } from 'react-icons/io5';
 import { CarFormData, CarProps } from '@/types';
-import { ConfigProvider, Drawer, Input, InputNumber, Select } from 'antd';
+import { ConfigProvider, Drawer, Input, InputNumber, Select, Skeleton } from 'antd';
 import { carManufacturers, carModels, categories, fuels } from '@/constants';
 import useDrawerState from '@/utils/useDrawerState';
 
@@ -13,6 +13,7 @@ interface CardFiltratorProps {
   cars: CarProps[];
   nmbrJours: number;
   setSelected: (car: CarProps) => void;
+  isLoading: boolean;
 }
 interface SelectedFilters {
   categorie?: string;
@@ -43,7 +44,7 @@ const places = [
     label: '7 Places +' }
 ]
 
-const CardFiltrator: React.FC<CardFiltratorProps> = ({ heading, cars, nmbrJours, setSelected }) => {
+const CardFiltrator: React.FC<CardFiltratorProps> = ({ heading, cars, nmbrJours, setSelected, isLoading }) => {
   
   const [categorie, setCategorie] = useState();
   const [marque, setMarque] = useState();
@@ -57,6 +58,7 @@ const CardFiltrator: React.FC<CardFiltratorProps> = ({ heading, cars, nmbrJours,
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredCars, setFilteredCars] = useState<CarProps[]>(cars);
   const [currentPage, setCurrentPage] = useState(1);
+  
   const itemsPerPage = 9;
 
   const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -312,22 +314,32 @@ const CardFiltrator: React.FC<CardFiltratorProps> = ({ heading, cars, nmbrJours,
         <div className='text-casal-600 flex items-center gap-2 cursor-pointer' onClick={drawerA.open}><IoFilter /><p>Trier et filtrer</p></div>
       </div>
       <div className="flex flex-wrap justify-around gap-6 my-8">
-        {currentCars.map((car, index) => (
-          <CarCard
-            key={index}
-            marque={car.marque}
-            modele={car.modele}
-            annee={car.annee}
-            nmbrPlace={car.place}
-            boiteVitesse={car.transition}
-            carburant={car.carburant}
-            imageVoiture={car.imagesVoiture}
-            killometrage={car.killometrage}
-            prixParJour={car.prixParJour}
-            prixTotal={calculatePrixTotal(car)}
-            onClick={() => handleCarCardClick(car)}
-          />
-        ))}
+        {isLoading ? (
+          Array.from({ length: itemsPerPage }).map((_, index) => (
+            <div key={index} className='w-[395px] h-[404px] bg-white rounded-md shadow-md shadow-mystic-900/20 p-3 flex flex-col gap-4 justify-center items-center'>
+              <Skeleton active title={{ width: 200 }} paragraph={false}  />
+              <Skeleton.Image active style={{ width: 371, height: 256 }} />
+              <Skeleton active paragraph={{rows: 2, width: [200, 300]}} title={false} />
+            </div>
+          ))
+        ) : (
+          currentCars.map((car, index) => (
+            <CarCard
+              key={index}
+              marque={car.marque}
+              modele={car.modele}
+              annee={car.annee}
+              nmbrPlace={car.place}
+              boiteVitesse={car.transition}
+              carburant={car.carburant}
+              imageVoiture={car.imagesVoiture}
+              killometrage={car.killometrage}
+              prixParJour={car.prixParJour}
+              prixTotal={calculatePrixTotal(car)}
+              onClick={() => handleCarCardClick(car)}
+            />
+          ))
+        )}
       </div>
       <div className='flex justify-center mt-4'>
         <button onClick={prevPage} disabled={currentPage === 1} 

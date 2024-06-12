@@ -1,5 +1,5 @@
 'use client';
-
+import { Suspense } from 'react'
 import { RangeFilterV2, Modal } from '@/components';
 import CardFiltrator from '@/components/CardFiltrator';
 import { CarFormData, CarProps, OwnerFormData } from '@/types';
@@ -14,7 +14,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isBetween);
 
 
-const Page = () => {
+const CarSearchPage = () => {
   const searchParams = useSearchParams();
   const rangeData = searchParams.get('rangeData');
   const agencyId = searchParams.get('agencyId');
@@ -28,25 +28,10 @@ const Page = () => {
   const [startDate, setStartDate] = useState<string>(results?.startDate || '');
   const [endDate, setEndDate] = useState<string>(results?.endDate || '');
   const [cars, setCars] = useState<CarProps[]>([]);
-
-  // const isCarAvailable = (car: CarFormData) => {
-  //   const selectedStartDate = dayjs(startDate);
-  //   const selectedEndDate = dayjs(endDate);
-
-  //   return car.availability.every(({ startDate, endDate }) => {
-  //     const carStartDate = dayjs(startDate);
-  //     const carEndDate = dayjs(endDate);
-
-  //     return !(
-  //       (selectedStartDate.isBetween(carStartDate, carEndDate, null, '[]')) ||
-  //       (selectedEndDate.isBetween(carStartDate, carEndDate, null, '[]')) ||
-  //       (carStartDate.isBetween(selectedStartDate, selectedEndDate, null, '[]')) ||
-  //       (carEndDate.isBetween(selectedStartDate, selectedEndDate, null, '[]'))
-  //     );
-  //   })
-  // }
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const fetchCars = async () => {
       if (agencyId) {
         try {
@@ -54,9 +39,11 @@ const Page = () => {
           const querySnapshot = await getDocs(q);
           const fetchedCars = querySnapshot.docs.map((doc) => convertCarFormDataToCarProps(doc.data() as CarFormData, doc.id))
             .filter((car) => isCarAvailable(car, startDate, endDate)) as CarProps[];
-        setCars(fetchedCars);
+          setCars(fetchedCars);
+          setLoading(false);
         } catch (error) {
           console.error('Error fetching cars: ', error);
+          setLoading(false);
         }
       } else if (localisation) {
         try {
@@ -65,8 +52,10 @@ const Page = () => {
           const fetchedCars = querySnapshot.docs.map((doc) => convertCarFormDataToCarProps(doc.data() as CarFormData, doc.id))
             .filter((car) => isCarAvailable(car, startDate, endDate)) as CarProps[];
           setCars(fetchedCars);
+          setLoading(false);
         } catch (error) {
           console.error('Error fetching cars:', error);
+          setLoading(false);
         }
       } else if (!localisation) {
         try {
@@ -75,8 +64,10 @@ const Page = () => {
           const fetchedCars = querySnapshot.docs.map((doc) => convertCarFormDataToCarProps(doc.data() as CarFormData, doc.id))
             .filter((car) => isCarAvailable(car, startDate, endDate)) as CarProps[];
           setCars(fetchedCars);
+          setLoading(false);
         } catch (error) {
           console.error('Error fetching cars:', error);
+          setLoading(false);
         }
       }
   };
@@ -128,6 +119,7 @@ const Page = () => {
       cars={cars}
       nmbrJours={calculateNombreJours(startDate, endDate)}
       setSelected={setSelectedCar}
+      isLoading={loading}
       />
       {selectedCar && (
         <Modal
@@ -142,5 +134,11 @@ const Page = () => {
     </section>
   )
 }
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <CarSearchPage />
+  </Suspense>
+);
 
 export default Page

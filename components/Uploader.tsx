@@ -118,7 +118,6 @@ const handleDragEvent = (event: React.DragEvent<HTMLDivElement>) => {
 
       <div className='rounded-md overflow-hidden flex justify-between gap-2'>
 
-        {/* drag area  */}
         <div className='hover:cursor-pointer h-36 rounded-md border-2 border-dashed border-turquoise-500  text-mystic-900 bg-white flex justify-center 
         items-center select-none w-2/3'  onDragOver={handleDragEvent} onDragLeave={handleDragEvent} onDrop={handleDragEvent}  onClick={selectFiles}>
           {isDragging ? (
@@ -138,7 +137,6 @@ const handleDragEvent = (event: React.DragEvent<HTMLDivElement>) => {
           <input type="file" name='file' className='file hidden' multiple ref={fileInputRef} onChange={onFileSelect} />
         </div>
 
-        {/* container for the uploaded images */}
         <div className='container w-1/3 h-auto flex justify-center items-center flex-wrap max-h-48 overflow-y-auto '>
         {imageUrl && (
           <div className='image w-full mr-1 h-20 relative'>

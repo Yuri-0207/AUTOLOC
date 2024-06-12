@@ -1,6 +1,6 @@
 import { carManufacturers, carModels, categories } from '@/constants';
 import { ConfigProvider, Input, InputNumber, Select } from 'antd';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CarFormData } from '@/types';
 import { useUser } from '@/contexts/UserContext';
 
@@ -89,7 +89,7 @@ const AddCar = () => {
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const {user} = useUser();
-  const firestore = getFirestore(getApp()); // Initialize Firestore
+  const firestore = getFirestore(getApp());
 
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
@@ -270,7 +270,14 @@ const AddCar = () => {
           onChange={(value) => setModele(value)}  
           filterOption={filterOption} allowClear
           options={typeOptions} 
-          popupClassName='w-full' />
+          popupClassName='w-full'
+          onSearch={(input) => {
+            const isExistingOption = typeOptions.some(option => option.label.toLowerCase() === input.toLowerCase());
+            if (!isExistingOption) {
+              setTypeOptions(prevOptions => [...prevOptions, { label: input, value: input }]);
+              setModele(input);
+            }
+          }} />
         </div>
 
         <div className="flex flex-col gap-2">
